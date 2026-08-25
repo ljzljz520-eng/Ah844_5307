@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "metrics": {
+    "production_loc": 2303,
+    "production_files": 22,
+    "production_packages": 7,
+    "test_files": 9,
+    "production_functions": 124,
+    "decision_points": 174
+  },
+  "persistence": {
+    "module": "go.etcd.io/bbolt",
+    "entities": ["Vehicle", "Driver", "Route", "Waybill", "Conversion"],
+    "reopen_test": "TestPersistenceSurvivesReopen"
+  },
+  "workflows": [
+    {
+      "steps": ["parse source database schema", "select vehicle and driver tables", "generate target DDL", "save draft conversion"],
+      "test": "TestWorkflowOne"
+    },
+    {
+      "steps": ["load saved conversion", "review differences", "request confirmation", "reject execution without confirmation"],
+      "test": "TestWorkflowTwo"
+    },
+    {
+      "steps": ["open confirmed conversion", "perform second confirmation", "execute target DDL", "persist executed state"],
+      "test": "TestWorkflowThree"
+    }
+  ]
+}
